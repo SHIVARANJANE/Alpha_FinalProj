@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bulb Controller</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      background-image: linear-gradient(45deg, #874da2 0%, #c43a30 100%);
+      padding-top: 50px;
+    }
+
+    h1 {
+      color:#ffffff;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 100px;
+      height: 50px;
+      margin-top: 30px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 50px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 40px;
+      width: 40px;
+      left: 5px;
+      bottom: 5px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(50px);
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <h1>💡 IoT Bulb Controller</h1>
+
+  <label class="switch">
+    <input type="checkbox" id="bulbToggle" onchange="toggleBulb(this.checked)">
+    <span class="slider"></span>
+  </label>
+
+  <p id="status">Bulb is OFF</p>
+
+  <script>
+    const esp32IP = 'http://192.168.228.143'; // Replace with your ESP32 IP
+
+    function toggleBulb(isOn) {
+      const state = isOn ? 'on' : 'off';
+      fetch(`${esp32IP}/${state}`)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => {
+          document.getElementById("status").innerText = data;
+        })
+        .catch(error => {
+          document.getElementById("status").innerText = "Error: " + error.message;
+        });
+    }
+  </script>
+</body>
+</html>
