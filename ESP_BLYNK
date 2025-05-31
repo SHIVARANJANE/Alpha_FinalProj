@@ -1,0 +1,34 @@
+#define BLYNK_PRINT Serial
+#define RELAY_PIN 2 
+
+#define BLYNK_TEMPLATE_ID "TMPL3L8nV2UVN"
+#define BLYNK_TEMPLATE_NAME "IOT LIGHT"
+#define BLYNK_AUTH_TOKEN "S7KbZhg1gYMfDJmg4acW9_2tmVbQzkrs"
+
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+
+char ssid[] = "Y35";
+char pass[] = "2006____";
+
+void setup()
+{
+  Serial.begin(115200);
+
+  pinMode(RELAY_PIN, OUTPUT);
+  digitalWrite(RELAY_PIN, LOW);  // Make sure relay is OFF at startup
+
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+}
+
+void loop()
+{
+  Blynk.run();
+}
+
+BLYNK_WRITE(V2)
+{
+  int relayState = param.asInt();  
+  digitalWrite(RELAY_PIN, relayState);
+}
